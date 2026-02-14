@@ -1,0 +1,95 @@
+@import 'tailwindcss';
+
+:root {
+  --primary: var(--color-slate-300);
+  --primary-text: var(--color-zinc-700);
+
+  --secondary: var(--color-zinc-200);
+  --secondary-text: var(--color-zinc-700);
+
+  --neutral: var(--color-slate-500);
+  --neutral-text: var(--color-slate-100);
+
+  --info: var(--color-cyan-600);
+  --info-text: var(--color-cyan-100);
+
+  --error: var(--color-rose-600);
+  --error-text: var(--color-rose-100);
+
+  --disabled: var(--color-slate-400);
+  --disabled-text: var(--color-slate-900);
+
+  --contrast: var(--color-zinc-950);
+  --background: var(--color-slate-50);
+
+  --skeleton: var(--color-slate-300);
+}
+
+.dark:root {
+  --primary: var(--color-slate-700);
+  --primary-text: var(--color-slate-300);
+
+  --secondary: var(--color-zinc-800);
+  --secondary-text: var(--color-zinc-300);
+
+  --info: var(--color-cyan-400);
+  --info-text: var(--color-cyan-900);
+
+  --error: var(--color-rose-400);
+  --error-text: var(--color-rose-900);
+
+  --disabled: var(--color-slate-600);
+  --disabled-text: var(--color-slate-100);
+
+  --contrast: #ffffff;
+  --background: var(--color-zinc-950);
+
+  --skeleton: var(--color-slate-700);
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-text: var(--primary-text);
+  --color-secondary: var(--secondary);
+  --color-secondary-text: var(--secondary-text);
+  --color-neutral: var(--neutral);
+  --color-neutral-text: var(--neutral-text);
+  --color-info: var(--info);
+  --color-info-text: var(--info-text);
+  --color-error: var(--error);
+  --color-error-text: var(--error-text);
+  --color-contrast: var(--contrast);
+  --color-background: var(--background);
+  --color-skeleton: var(--skeleton);
+}
+
+body {
+  @apply bg-background m-0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+html {
+  overflow: hidden;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+:where(
+  button,
+  a[href],
+  input,
+  textarea,
+  select,
+  [data-focus-item]
+):focus-visible {
+  outline: none;
+  @apply ring-offset-background ring-contrast ring-4 ring-offset-3;
+}
