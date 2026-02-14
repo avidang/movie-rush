@@ -1,8 +1,8 @@
 import { FocusWrapper } from '@/components/focus/FocusWrapper';
+import { searchQueryChanged, useAppDispatch, useAppSelector } from '@/store';
+import { selectSearch } from '@/store/search/selectors';
 
 interface MoviesSearchBarProps {
-  value: string;
-  onChange: (value: string) => void;
   inputId: string;
   label?: string;
   placeholder?: string;
@@ -10,25 +10,28 @@ interface MoviesSearchBarProps {
 }
 
 export const MoviesSearchBar = ({
-  value,
-  onChange,
   inputId,
   label = 'Search movies',
   placeholder = 'Type at least 2 characters...',
   className,
 }: MoviesSearchBarProps) => {
+  const dispatch = useAppDispatch();
+  const query = useAppSelector((state) => selectSearch(state).query);
   return (
     <FocusWrapper className={className ?? 'flex flex-col gap-2'}>
-      <label className="text-sm font-semibold text-secondary-text" htmlFor={inputId}>
+      <label
+        className="text-secondary-text text-sm font-semibold"
+        htmlFor={inputId}
+      >
         {label}
       </label>
       <input
         id={inputId}
         type="search"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
+        value={query}
+        onChange={(event) => dispatch(searchQueryChanged(event.target.value))}
         placeholder={placeholder}
-        className="w-full max-w-md rounded-2xl border border-primary bg-secondary px-4 py-2 text-sm text-secondary-text shadow-sm outline-none focus:border-slate-400"
+        className="border-primary bg-secondary text-secondary-text w-full max-w-md rounded-2xl border px-4 py-2 text-sm shadow-sm outline-none focus:border-slate-400"
       />
     </FocusWrapper>
   );

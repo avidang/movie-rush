@@ -1,26 +1,16 @@
 import { MoviesGrid } from '../MoviesGrid';
 
-import type { ReactNode } from 'react';
+import { useAppSelector } from '@/store/hooks';
+import { selectSearch } from '@/store/search/selectors';
 
-import type { SearchState } from '@/store/search/types';
+export const MoviesSearchResults = () => {
+  const searchState = useAppSelector(selectSearch);
 
-interface MoviesSearchResultsProps {
-  searchState: SearchState;
-  isSearchActive: boolean;
-  fallback?: ReactNode;
-}
-
-export const MoviesSearchResults = ({
-  searchState,
-  isSearchActive,
-  fallback,
-}: MoviesSearchResultsProps) => {
+  const isSearchActive = searchState.query.trim().length >= 2;
   const shouldShowSearchResults =
     isSearchActive && (searchState.isLoading || searchState.hasSearched);
 
-  if (!shouldShowSearchResults) {
-    return <>{fallback ?? null}</>;
-  }
+  if (!shouldShowSearchResults) return null;
 
   if (searchState.error && !searchState.items.length) {
     return (

@@ -48,7 +48,7 @@ export const MoviesGrid = ({
 const SkeletonCards = ({ count }: { count: number }) => {
   const items = useMemo(
     () =>
-      Array.from({ length: count }).map((index) => ({
+      Array.from({ length: count }).map((_, index) => ({
         id: `skeleton-${index}`,
       })),
     [count],

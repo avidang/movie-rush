@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { MoviesGrid } from './MoviesGrid';
 import { MoviesFilterBar } from './MoviesFilterBar';
@@ -7,7 +7,6 @@ import { MoviesSearchSection } from './search/MoviesSearchSection';
 import {
   fetchHomeRequested,
   selectHomeMovies,
-  selectSearch,
   useAppDispatch,
   useAppSelector,
 } from '@/store';
@@ -15,17 +14,19 @@ import {
 export const MoviesHomePage = () => {
   const dispatch = useAppDispatch();
   const homeState = useAppSelector(selectHomeMovies);
-  const searchState = useAppSelector(selectSearch);
-
-  const isSearchActive = searchState.query.trim().length >= 2;
+  const hasSearched = useAppSelector((state) => state.search.hasSearched);
+  const homeMoviesToRender = useMemo(
+    () => (homeState.isLoading ? [] : homeState.items),
+    [homeState.isLoading, homeState.items],
+  );
 
   useEffect(() => {
-    if (homeState.items.length || isSearchActive) return;
+    if (homeState.items.length || homeState.isLoading) return;
 
     dispatch(fetchHomeRequested(1));
-  }, [dispatch, isSearchActive, homeState.items.length]);
+  }, [dispatch, homeState.isLoading, homeState.items.length]);
 
-  if (!isSearchActive && homeState.error) {
+  if (homeState.error && !homeState.items.length) {
     return <div>Error: {homeState.error}</div>;
   }
 
@@ -41,15 +42,16 @@ export const MoviesHomePage = () => {
           film.
         </p>
       </div>
-      <MoviesFilterBar title="Explore Movies" />
-      <MoviesSearchSection
-        fallback={
+      <div className="space-y-6">
+        <MoviesFilterBar title="Explore Movies" />
+        <MoviesSearchSection />
+        {!hasSearched && (
           <MoviesGrid
             isLoading={homeState.isLoading}
-            movies={homeState.items}
+            movies={homeMoviesToRender}
           />
-        }
-      />
+        )}
+      </div>
     </div>
   );
 };
