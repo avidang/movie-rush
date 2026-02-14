@@ -5,19 +5,15 @@ import type { ComponentProps } from 'react';
 import { cn } from '@/utils/cn';
 
 const buttonVariants = cva(
-  'rounded-full font-semibold hover:opacity-80 cursor-pointer',
+  'rounded-full font-semibold hover:opacity-80 disabled:opacity-50 disabled:pointer-events-none cursor-pointer',
   {
     variants: {
       color: {
-        primary:
-          'bg-primary text-primary-text disabled:bg-disabled disabled:text-disabled-text border-primary',
-        secondary:
-          'bg-secondary text-secondary-text disabled:bg-disabled disabled:text-disabled-text border-secondary',
-        neutral:
-          'bg-neutral text-neutral-text disabled:bg-disabled disabled:text-disabled-text border-neutral',
-        info: 'bg-info text-info-text disabled:bg-disabled disabled:text-disabled-text border-info',
-        error:
-          'bg-error text-error-text disabled:bg-disabled disabled:text-disabled-text border-error',
+        primary: 'bg-primary text-primary-text border-primary',
+        secondary: 'bg-secondary text-secondary-text border-secondary',
+        neutral: 'bg-neutral text-neutral-text border-neutral',
+        info: 'bg-info text-info-text border-info',
+        error: 'bg-error text-error-text border-error',
       },
       variant: {
         ghost: 'bg-transparent disabled:bg-transparent',

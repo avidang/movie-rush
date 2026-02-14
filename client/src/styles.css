@@ -16,9 +16,6 @@
   --error: var(--color-rose-600);
   --error-text: var(--color-rose-100);
 
-  --disabled: var(--color-slate-400);
-  --disabled-text: var(--color-slate-900);
-
   --contrast: var(--color-zinc-950);
   --background: var(--color-slate-50);
 
@@ -37,9 +34,6 @@
 
   --error: var(--color-rose-400);
   --error-text: var(--color-rose-900);
-
-  --disabled: var(--color-slate-600);
-  --disabled-text: var(--color-slate-100);
 
   --contrast: #ffffff;
   --background: var(--color-zinc-950);
