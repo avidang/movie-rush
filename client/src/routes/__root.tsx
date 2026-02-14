@@ -1,7 +1,7 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router';
 
 import { FocusWrapperManager } from '@/components/focus/FocusWrapperManager';
-import { TopBar } from '@/components/TopBar';
+import { TopBar } from '@/components/tobar/TopBar';
 
 export const Route = createRootRoute({
   component: RootLayout,

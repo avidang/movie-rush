@@ -9,10 +9,7 @@ import { DetailsOverview } from './DetailsOverview';
 import { DetailsStats } from './DetailsStats';
 
 import {
-  favoritesAdded,
-  favoritesRemoved,
   fetchMovieDetailsRequested,
-  selectIsFavoriteById,
   selectMovieDetails,
   useAppDispatch,
   useAppSelector,
@@ -35,9 +32,6 @@ export const MovieDetailsPage = ({ movieId }: MovieDetailsPageProps) => {
   }, [dispatch, parsedId]);
 
   const movie = detailsState.item;
-  const isFavorite = useAppSelector((state) =>
-    movie ? selectIsFavoriteById(state, movie.id) : false,
-  );
 
   if (detailsState.isLoading) {
     return <Skeleton />;
@@ -79,14 +73,7 @@ export const MovieDetailsPage = ({ movieId }: MovieDetailsPageProps) => {
             <DetailsGenres genres={movie.genres} />
             <DetailsOverview overview={movie.overview} />
             <DetailsActions
-              isFavorite={isFavorite}
-              onToggleFavorite={() => {
-                if (isFavorite) {
-                  dispatch(favoritesRemoved(movie.id));
-                } else {
-                  dispatch(favoritesAdded(movie));
-                }
-              }}
+              movie={movie}
               className="flex flex-wrap items-center gap-3"
               trailerTitle={movie.title}
               trailerVideos={movie.videos}
