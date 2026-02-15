@@ -23,7 +23,6 @@ export const MovieTrailer = ({
   );
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    console.log('Key down in trailer dialog:', event.key);
     if (event.key === 'Escape') {
       event.preventDefault();
       onClose();
