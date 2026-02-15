@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
 
 import { MoviesGrid } from './MoviesGrid';
 import { MoviesFilterBar } from './MoviesFilterBar';
@@ -24,18 +25,53 @@ export const MoviesListPage = ({
   fetchAction,
 }: MoviesListPageProps) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const listState = useAppSelector(selectList);
+  const routePage = useRouterState({
+    select: (state) => parsePageFromSearch(state.location.search),
+  });
+  const hasPageParam = useRouterState({
+    select: (state) => hasPageInSearch(state.location.search),
+  });
 
   const handlePageChange = (page: number) => {
-    if (listState.isLoading || page === listState.page) return;
-    dispatch(fetchAction(page));
+    if (listState.isLoading || page === routePage) return;
+    navigate({
+      to: '.',
+      search: (previous) => ({
+        ...previous,
+        page,
+      }),
+    });
   };
 
   useEffect(() => {
-    if (listState.items.length) return;
+    if (!hasPageParam) {
+      navigate({
+        to: '.',
+        search: (previous) => ({
+          ...previous,
+          page: 1,
+        }),
+        replace: true,
+      });
+      return;
+    }
 
-    dispatch(fetchAction(1));
-  }, [dispatch, fetchAction, listState.items.length]);
+    if (listState.isLoading) return;
+    if (listState.page === routePage && listState.items.length) return;
+
+    dispatch(fetchAction(routePage));
+  }, [
+    dispatch,
+    fetchAction,
+    listState.isLoading,
+    listState.items.length,
+    listState.page,
+    hasPageParam,
+    navigate,
+    routePage,
+  ]);
 
   if (listState.error) {
     return <div>Error: {listState.error}</div>;
@@ -47,10 +83,23 @@ export const MoviesListPage = ({
       <MoviesGrid
         isLoading={listState.isLoading}
         movies={listState.items}
-        currentPage={listState.page}
+        currentPage={routePage}
         totalPages={listState.totalPages}
         onPageChange={handlePageChange}
       />
     </div>
   );
+};
+
+const parsePageFromSearch = (search: unknown) => {
+  if (!search || typeof search !== 'object') return 1;
+  const rawPage = (search as Record<string, unknown>).page;
+  const parsed = Number(rawPage);
+  return Number.isNaN(parsed) || parsed < 1 ? 1 : parsed;
+};
+
+const hasPageInSearch = (search: unknown) => {
+  if (!search || typeof search !== 'object') return false;
+  const rawPage = (search as Record<string, unknown>).page;
+  return rawPage !== undefined;
 };

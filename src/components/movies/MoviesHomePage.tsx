@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
 
 import { MoviesGrid } from './MoviesGrid';
 import { MoviesFilterBar } from './MoviesFilterBar';
@@ -13,22 +14,56 @@ import {
 
 export const MoviesHomePage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const homeState = useAppSelector(selectHomeMovies);
   const hasSearched = useAppSelector((state) => state.search.hasSearched);
+  const routePage = useRouterState({
+    select: (state) => parsePageFromSearch(state.location.search),
+  });
+  const hasPageParam = useRouterState({
+    select: (state) => hasPageInSearch(state.location.search),
+  });
   const homeMoviesToRender = useMemo(
     () => (homeState.isLoading ? [] : homeState.items),
     [homeState.isLoading, homeState.items],
   );
 
   useEffect(() => {
-    if (homeState.items.length || homeState.isLoading) return;
+    if (!hasPageParam) {
+      navigate({
+        to: '.',
+        search: (previous) => ({
+          ...previous,
+          page: 1,
+        }),
+        replace: true,
+      });
+      return;
+    }
 
-    dispatch(fetchHomeRequested(1));
-  }, [dispatch, homeState.isLoading, homeState.items.length]);
+    if (homeState.isLoading) return;
+    if (homeState.page === routePage && homeState.items.length) return;
+
+    dispatch(fetchHomeRequested(routePage));
+  }, [
+    dispatch,
+    homeState.isLoading,
+    homeState.items.length,
+    homeState.page,
+    hasPageParam,
+    navigate,
+    routePage,
+  ]);
 
   const handlePageChange = (page: number) => {
-    if (homeState.isLoading || page === homeState.page) return;
-    dispatch(fetchHomeRequested(page));
+    if (homeState.isLoading || page === routePage) return;
+    navigate({
+      to: '.',
+      search: (previous) => ({
+        ...previous,
+        page,
+      }),
+    });
   };
 
   if (homeState.error && !homeState.items.length) {
@@ -54,7 +89,7 @@ export const MoviesHomePage = () => {
           <MoviesGrid
             isLoading={homeState.isLoading}
             movies={homeMoviesToRender}
-            currentPage={homeState.page}
+            currentPage={routePage}
             totalPages={homeState.totalPages}
             onPageChange={handlePageChange}
           />
@@ -62,4 +97,17 @@ export const MoviesHomePage = () => {
       </div>
     </div>
   );
+};
+
+const parsePageFromSearch = (search: unknown) => {
+  if (!search || typeof search !== 'object') return 1;
+  const rawPage = (search as Record<string, unknown>).page;
+  const parsed = Number(rawPage);
+  return Number.isNaN(parsed) || parsed < 1 ? 1 : parsed;
+};
+
+const hasPageInSearch = (search: unknown) => {
+  if (!search || typeof search !== 'object') return false;
+  const rawPage = (search as Record<string, unknown>).page;
+  return rawPage !== undefined;
 };
