@@ -7,21 +7,16 @@ interface DetailsActionsProps {
   movie: MovieDetail;
   compact?: boolean;
   className?: string;
-  trailerTitle: string;
   trailerVideos: MovieDetail['videos'];
 }
 
 export const DetailsActions = ({
   movie,
   className,
-  trailerTitle,
   trailerVideos,
 }: DetailsActionsProps) => (
   <FocusWrapper className={className ?? 'flex flex-wrap items-center gap-3'}>
-    <PlayTrailerAction
-      trailerVideos={trailerVideos}
-      trailerTitle={trailerTitle}
-    />
+    <PlayTrailerAction movieId={movie.id} trailerVideos={trailerVideos} />
     <FavoriteAction movie={movie} />
   </FocusWrapper>
 );

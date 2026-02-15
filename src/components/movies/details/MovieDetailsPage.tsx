@@ -38,11 +38,11 @@ export const MovieDetailsPage = ({ movieId }: MovieDetailsPageProps) => {
   }
 
   if (detailsState.error) {
-    return <div className="p-6 text-error">Error: {detailsState.error}</div>;
+    return <div className="text-error p-6">Error: {detailsState.error}</div>;
   }
 
   if (!movie) {
-    return <div className="p-6 text-error">Movie not found.</div>;
+    return <div className="text-error p-6">Movie not found.</div>;
   }
 
   return (
@@ -75,7 +75,6 @@ export const MovieDetailsPage = ({ movieId }: MovieDetailsPageProps) => {
             <DetailsActions
               movie={movie}
               className="flex flex-wrap items-center gap-3"
-              trailerTitle={movie.title}
               trailerVideos={movie.videos}
             />
             <DetailsStats
@@ -88,21 +87,22 @@ export const MovieDetailsPage = ({ movieId }: MovieDetailsPageProps) => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };
 
 const Skeleton = () => (
   <div className="animate-pulse space-y-6 p-4">
-    <div className="h-64 w-full rounded-lg bg-skeleton" />
+    <div className="bg-skeleton h-64 w-full rounded-lg" />
     <div className="space-y-3">
-      <div className="h-6 w-1/3 rounded bg-skeleton" />
-      <div className="h-4 w-1/2 rounded bg-skeleton" />
-      <div className="h-4 w-1/4 rounded bg-skeleton" />
+      <div className="bg-skeleton h-6 w-1/3 rounded" />
+      <div className="bg-skeleton h-4 w-1/2 rounded" />
+      <div className="bg-skeleton h-4 w-1/4 rounded" />
     </div>
-    <div className="h-4 w-full rounded bg-skeleton" />
-    <div className="h-4 w-full rounded bg-skeleton" />
-    <div className="h-4 w-full rounded bg-skeleton" />
+    <div className="bg-skeleton h-4 w-full rounded" />
+    <div className="bg-skeleton h-4 w-full rounded" />
+    <div className="bg-skeleton h-4 w-full rounded" />
   </div>
 );
 

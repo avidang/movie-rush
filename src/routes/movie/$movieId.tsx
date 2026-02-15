@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { Outlet, createFileRoute } from '@tanstack/react-router';
 
 import { MovieDetailsPage } from '@/components/movies/details/MovieDetailsPage';
 
@@ -8,5 +8,10 @@ export const Route = createFileRoute('/movie/$movieId')({
 
 function RouteComponent() {
   const { movieId } = Route.useParams();
-  return <MovieDetailsPage movieId={movieId} />;
+  return (
+    <>
+      <MovieDetailsPage movieId={movieId} />
+      <Outlet />
+    </>
+  );
 }

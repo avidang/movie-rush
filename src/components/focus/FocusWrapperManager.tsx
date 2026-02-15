@@ -1,15 +1,20 @@
+import { useCanGoBack, useRouter } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
 const focusableSelector =
   'button, a[href], input, textarea, select, [data-focus-item], [tabindex]';
 
 export const FocusWrapperManager = () => {
+  const router = useRouter();
+  const canGoBack = useCanGoBack();
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown, true);
+    const handleKeyDownWrapper = (event: KeyboardEvent) =>
+      handleKeyDown(event, router, canGoBack);
+    window.addEventListener('keydown', handleKeyDownWrapper, true);
     return () => {
-      window.removeEventListener('keydown', handleKeyDown, true);
+      window.removeEventListener('keydown', handleKeyDownWrapper, true);
     };
-  }, []);
+  }, [router, canGoBack]);
 
   return null;
 };
@@ -66,11 +71,24 @@ const findWrapperWithItems = (
   return null;
 };
 
-const handleKeyDown = (event: KeyboardEvent) => {
+const handleKeyDown = (
+  event: KeyboardEvent,
+  router: ReturnType<typeof useRouter>,
+  canGoBack: boolean,
+) => {
   if (event.key === 'Tab') {
     event.preventDefault();
     event.stopPropagation();
     return;
+  }
+
+  if (event.key === 'Escape') {
+    console.log('Escape key pressed. Can go back:', canGoBack);
+
+    if (canGoBack) {
+      router.history.back();
+      return;
+    }
   }
 
   const active = document.activeElement as HTMLElement | null;

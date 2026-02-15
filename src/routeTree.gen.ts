@@ -14,6 +14,7 @@ import { Route as MoviePopularRouteImport } from './routes/movie/popular'
 import { Route as MovieFavoriteRouteImport } from './routes/movie/favorite'
 import { Route as MovieAiringNowRouteImport } from './routes/movie/airing-now'
 import { Route as MovieMovieIdRouteImport } from './routes/movie/$movieId'
+import { Route as MovieMovieIdTrailerRouteImport } from './routes/movie/$movieId.trailer'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,28 +41,36 @@ const MovieMovieIdRoute = MovieMovieIdRouteImport.update({
   path: '/movie/$movieId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MovieMovieIdTrailerRoute = MovieMovieIdTrailerRouteImport.update({
+  id: '/trailer',
+  path: '/trailer',
+  getParentRoute: () => MovieMovieIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/movie/$movieId': typeof MovieMovieIdRoute
+  '/movie/$movieId': typeof MovieMovieIdRouteWithChildren
   '/movie/airing-now': typeof MovieAiringNowRoute
   '/movie/favorite': typeof MovieFavoriteRoute
   '/movie/popular': typeof MoviePopularRoute
+  '/movie/$movieId/trailer': typeof MovieMovieIdTrailerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/movie/$movieId': typeof MovieMovieIdRoute
+  '/movie/$movieId': typeof MovieMovieIdRouteWithChildren
   '/movie/airing-now': typeof MovieAiringNowRoute
   '/movie/favorite': typeof MovieFavoriteRoute
   '/movie/popular': typeof MoviePopularRoute
+  '/movie/$movieId/trailer': typeof MovieMovieIdTrailerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/movie/$movieId': typeof MovieMovieIdRoute
+  '/movie/$movieId': typeof MovieMovieIdRouteWithChildren
   '/movie/airing-now': typeof MovieAiringNowRoute
   '/movie/favorite': typeof MovieFavoriteRoute
   '/movie/popular': typeof MoviePopularRoute
+  '/movie/$movieId/trailer': typeof MovieMovieIdTrailerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,6 +80,7 @@ export interface FileRouteTypes {
     | '/movie/airing-now'
     | '/movie/favorite'
     | '/movie/popular'
+    | '/movie/$movieId/trailer'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -78,6 +88,7 @@ export interface FileRouteTypes {
     | '/movie/airing-now'
     | '/movie/favorite'
     | '/movie/popular'
+    | '/movie/$movieId/trailer'
   id:
     | '__root__'
     | '/'
@@ -85,11 +96,12 @@ export interface FileRouteTypes {
     | '/movie/airing-now'
     | '/movie/favorite'
     | '/movie/popular'
+    | '/movie/$movieId/trailer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  MovieMovieIdRoute: typeof MovieMovieIdRoute
+  MovieMovieIdRoute: typeof MovieMovieIdRouteWithChildren
   MovieAiringNowRoute: typeof MovieAiringNowRoute
   MovieFavoriteRoute: typeof MovieFavoriteRoute
   MoviePopularRoute: typeof MoviePopularRoute
@@ -132,12 +144,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MovieMovieIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/movie/$movieId/trailer': {
+      id: '/movie/$movieId/trailer'
+      path: '/trailer'
+      fullPath: '/movie/$movieId/trailer'
+      preLoaderRoute: typeof MovieMovieIdTrailerRouteImport
+      parentRoute: typeof MovieMovieIdRoute
+    }
   }
 }
 
+interface MovieMovieIdRouteChildren {
+  MovieMovieIdTrailerRoute: typeof MovieMovieIdTrailerRoute
+}
+
+const MovieMovieIdRouteChildren: MovieMovieIdRouteChildren = {
+  MovieMovieIdTrailerRoute: MovieMovieIdTrailerRoute,
+}
+
+const MovieMovieIdRouteWithChildren = MovieMovieIdRoute._addFileChildren(
+  MovieMovieIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  MovieMovieIdRoute: MovieMovieIdRoute,
+  MovieMovieIdRoute: MovieMovieIdRouteWithChildren,
   MovieAiringNowRoute: MovieAiringNowRoute,
   MovieFavoriteRoute: MovieFavoriteRoute,
   MoviePopularRoute: MoviePopularRoute,
