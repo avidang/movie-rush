@@ -1,4 +1,9 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
 
 import { Button } from './Button';
 
@@ -33,6 +38,16 @@ export const Pagination = ({
       <Button
         size="icon"
         color="secondary"
+        aria-label="First page"
+        disabled={isDisabled || safeCurrentPage <= 1}
+        onClick={() => onPageChange(1)}
+      >
+        <ChevronsLeft className="h-4 w-4" aria-hidden="true" />
+      </Button>
+
+      <Button
+        size="icon"
+        color="secondary"
         aria-label="Previous page"
         disabled={isDisabled || safeCurrentPage <= 1}
         onClick={() => onPageChange(safeCurrentPage - 1)}
@@ -62,6 +77,16 @@ export const Pagination = ({
         onClick={() => onPageChange(safeCurrentPage + 1)}
       >
         <ChevronRight className="h-4 w-4" aria-hidden="true" />
+      </Button>
+
+      <Button
+        size="icon"
+        color="secondary"
+        aria-label="Last page"
+        disabled={isDisabled || safeCurrentPage >= totalPages}
+        onClick={() => onPageChange(totalPages)}
+      >
+        <ChevronsRight className="h-4 w-4" aria-hidden="true" />
       </Button>
     </div>
   );
