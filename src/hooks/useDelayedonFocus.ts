@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-type UseDelayedEnterClickOptions = {
+type UseDelayedonFocusOptions = {
   delayMs?: number;
 };
 
 const DEFAULT_DELAY_MS = 2000;
 
-export const useDelayedEnterClick = ({
+export const useDelayedonFocus = ({
   delayMs = DEFAULT_DELAY_MS,
-}: UseDelayedEnterClickOptions = {}) => {
+}: UseDelayedonFocusOptions = {}) => {
   const isKeydownLockedRef = useRef(false);
   const timeoutIdRef = useRef<number | null>(null);
   const [isWaiting, setIsWaiting] = useState(false);
@@ -21,11 +21,11 @@ export const useDelayedEnterClick = ({
     };
   }, []);
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLButtonElement>) => {
+  const handleFocus = useCallback(
+    (event: React.FocusEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      if (event.key !== 'Enter' || isKeydownLockedRef.current) {
+      if (isKeydownLockedRef.current) {
         return;
       }
 
@@ -42,5 +42,5 @@ export const useDelayedEnterClick = ({
     [delayMs],
   );
 
-  return { isWaiting, handleKeyDown };
+  return { isWaiting, handleFocus };
 };

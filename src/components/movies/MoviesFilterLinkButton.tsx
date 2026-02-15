@@ -7,14 +7,14 @@ interface MoviesFilterLinkButtonProps {
   to: string;
   title: string;
   isWaiting?: boolean;
-  handleKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
+  handleFocus?: React.FocusEventHandler<HTMLButtonElement>;
 }
 
 const MoviesFilterLinkButton = ({
   to,
   title,
   isWaiting,
-  handleKeyDown,
+  handleFocus,
 }: MoviesFilterLinkButtonProps) => {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
@@ -25,10 +25,10 @@ const MoviesFilterLinkButton = ({
   return (
     <Button
       asChild
-      className={cn(isWaiting && 'animate-pulse')}
+      className={cn(isWaiting && !isActive && 'animate-pulse')}
       color={isActive ? 'primary' : 'secondary'}
       ref={buttonRef}
-      onKeyDown={handleKeyDown}
+      onFocus={handleFocus}
     >
       <Link to={to}>{title}</Link>
     </Button>

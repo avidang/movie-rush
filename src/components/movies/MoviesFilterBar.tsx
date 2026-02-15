@@ -1,15 +1,13 @@
 import { MoviesFilterLinkButton } from './MoviesFilterLinkButton';
 import { FocusWrapper } from '@/components/focus/FocusWrapper';
-import { useDelayedEnterClick } from '@/hooks/useDelayedEnterClick';
+import { useDelayedonFocus } from '@/hooks/useDelayedonFocus';
 
 export const MoviesFilterBar = ({ title }: { title: string }) => {
-  const {
-    isWaiting: isWaitingAiringNow,
-    handleKeyDown: handleKeyDownAiringNow,
-  } = useDelayedEnterClick({ delayMs: 2000 });
+  const { isWaiting: isWaitingAiringNow, handleFocus: handleFocusAiringNow } =
+    useDelayedonFocus({ delayMs: 2000 });
 
-  const { isWaiting: isWaitingPopular, handleKeyDown: handleKeyDownPopular } =
-    useDelayedEnterClick({ delayMs: 2000 });
+  const { isWaiting: isWaitingPopular, handleFocus: handleFocusPopular } =
+    useDelayedonFocus({ delayMs: 2000 });
 
   return (
     <FocusWrapper className="flex flex-wrap items-center justify-between gap-4">
@@ -19,13 +17,13 @@ export const MoviesFilterBar = ({ title }: { title: string }) => {
           to="/movie/popular"
           title="Popular"
           isWaiting={isWaitingPopular}
-          handleKeyDown={handleKeyDownPopular}
+          handleFocus={handleFocusPopular}
         />
         <MoviesFilterLinkButton
           to="/movie/airing-now"
           title="Airing Now"
           isWaiting={isWaitingAiringNow}
-          handleKeyDown={handleKeyDownAiringNow}
+          handleFocus={handleFocusAiringNow}
         />
         <MoviesFilterLinkButton to="/movie/favorite" title="My Favorites" />
       </div>
