@@ -8,6 +8,7 @@ interface MoviesFilterLinkButtonProps {
   title: string;
   isWaiting?: boolean;
   handleFocus?: React.FocusEventHandler<HTMLButtonElement>;
+  handleBlur?: React.FocusEventHandler<HTMLButtonElement>;
 }
 
 const MoviesFilterLinkButton = ({
@@ -15,6 +16,7 @@ const MoviesFilterLinkButton = ({
   title,
   isWaiting,
   handleFocus,
+  handleBlur,
 }: MoviesFilterLinkButtonProps) => {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
@@ -29,6 +31,7 @@ const MoviesFilterLinkButton = ({
       color={isActive ? 'primary' : 'secondary'}
       ref={buttonRef}
       onFocus={handleFocus}
+      onBlur={handleBlur}
     >
       <Link to={to}>{title}</Link>
     </Button>

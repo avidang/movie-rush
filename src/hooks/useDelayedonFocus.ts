@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-type UseDelayedonFocusOptions = {
+type UseDelayedOnFocusOptions = {
   delayMs?: number;
 };
 
 const DEFAULT_DELAY_MS = 2000;
 
-export const useDelayedonFocus = ({
+export const useDelayedOnFocus = ({
   delayMs = DEFAULT_DELAY_MS,
-}: UseDelayedonFocusOptions = {}) => {
+}: UseDelayedOnFocusOptions = {}) => {
   const isKeydownLockedRef = useRef(false);
   const timeoutIdRef = useRef<number | null>(null);
   const [isWaiting, setIsWaiting] = useState(false);
@@ -42,5 +42,14 @@ export const useDelayedonFocus = ({
     [delayMs],
   );
 
-  return { isWaiting, handleFocus };
+  const handleBlur = useCallback(() => {
+    if (timeoutIdRef.current !== null) {
+      window.clearTimeout(timeoutIdRef.current);
+      timeoutIdRef.current = null;
+    }
+    isKeydownLockedRef.current = false;
+    setIsWaiting(false);
+  }, []);
+
+  return { isWaiting, handleFocus, handleBlur };
 };
