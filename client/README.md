@@ -1,1 +1,0 @@
-# Movie Rush is an app that will display movies using the TMDB API. It is built using React, TypeScript, and the TanStack Router for routing. The app is designed to be fast and responsive, with a clean and modern UI

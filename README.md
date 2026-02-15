@@ -1,40 +1,36 @@
 # Movie Rush
 
-Movie Rush is a work-in-progress movie browsing app with a React/Vite client and a Node/Express API server. The client consumes the server endpoints to fetch movie data and render the UI.
+Movie Rush displays movies using the TMDB API. It is built with React, TypeScript, Vite, and TanStack Router.
 
-## Project Structure
+## Requirements
 
-- client/ - React + Vite frontend
-- server/ - Node.js API server
+- Node.js 18+
+- A TMDB API key
 
-## Development Setup
+## Environment variables
 
-### Prerequisites
+Create a `.env` file in the project root:
 
-- Node.js (LTS recommended)
-- npm
+```env
+VITE_TMDB_API_KEY=your_tmdb_api_key_here
+```
 
-### Client
+Required variable:
 
-From the repo root:
+- `VITE_TMDB_API_KEY`: your TMDB API key used for all movie API requests.
+
+## Run with pnpm
 
 ```bash
-cd client
+pnpm install
+pnpm dev
+```
+
+## Run with npm
+
+```bash
 npm install
 npm run dev
 ```
 
-### Server
-
-From the repo root in a separate terminal:
-
-```bash
-cd server
-npm install
-npm run dev
-```
-
-## Notes
-
-- This project is under active development.
-- Only development workflows are documented here.
+The app will start on Vite's local dev server at `http://localhost:3000`.
