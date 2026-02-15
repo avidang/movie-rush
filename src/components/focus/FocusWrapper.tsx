@@ -31,6 +31,16 @@ export const FocusWrapper = ({
   gridColumns,
 }: FocusWrapperProps) => {
   const handleKeyDownCapture = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape') {
+      const currentTarget = event.currentTarget;
+      const items = getFocusable(currentTarget);
+      if (items.length) {
+        items[0].focus();
+        items[0].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      }
+      return;
+    }
+
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
 
     event.preventDefault();
