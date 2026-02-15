@@ -171,5 +171,12 @@ const handleKeyDown = (
 
   const direction = event.key === 'ArrowDown' ? 1 : -1;
   const nextWrapper = findWrapperWithItems(wrappers, activeIndex, direction);
-  if (nextWrapper) focusClosestInWrapper(nextWrapper, active);
+  if (!nextWrapper) return;
+
+  if (event.key === 'ArrowUp') {
+    focusClosestInWrapper(nextWrapper, active);
+    return;
+  }
+
+  focusFirstInWrapper(nextWrapper);
 };
