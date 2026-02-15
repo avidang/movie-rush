@@ -19,19 +19,6 @@ const initialState: SearchState = {
   error: null,
 };
 
-const mergeUniqueById = (
-  existing: SearchState['items'],
-  incoming: SearchState['items'],
-) => {
-  const merged = new Map(existing.map((item) => [item.id, item]));
-  incoming.forEach((item) => {
-    if (!merged.has(item.id)) {
-      merged.set(item.id, item);
-    }
-  });
-  return Array.from(merged.values());
-};
-
 export const searchReducer = (
   state: SearchState = initialState,
   action: SearchAction,
@@ -55,10 +42,7 @@ export const searchReducer = (
       if (action.payload.query !== state.query) return state;
       return {
         ...state,
-        items:
-          action.payload.page > 1
-            ? mergeUniqueById(state.items, action.payload.items)
-            : action.payload.items,
+        items: action.payload.items,
         page: action.payload.page,
         totalPages: action.payload.totalPages,
         totalResults: action.payload.totalResults,

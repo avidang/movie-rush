@@ -26,15 +26,9 @@ export const MoviesListPage = ({
   const dispatch = useAppDispatch();
   const listState = useAppSelector(selectList);
 
-  const canLoadMore =
-    listState.totalPages > 0 && listState.page < listState.totalPages;
-
-  const isLoadingMore = listState.isLoading && listState.items.length > 0;
-
-  const loadMore = () => {
-    if (!canLoadMore || listState.isLoading) return;
-
-    dispatch(fetchAction(listState.page + 1));
+  const handlePageChange = (page: number) => {
+    if (listState.isLoading || page === listState.page) return;
+    dispatch(fetchAction(page));
   };
 
   useEffect(() => {
@@ -53,9 +47,9 @@ export const MoviesListPage = ({
       <MoviesGrid
         isLoading={listState.isLoading}
         movies={listState.items}
-        hasMore={canLoadMore}
-        isLoadingMore={isLoadingMore}
-        onLoadMore={loadMore}
+        currentPage={listState.page}
+        totalPages={listState.totalPages}
+        onPageChange={handlePageChange}
       />
     </div>
   );

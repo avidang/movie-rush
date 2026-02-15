@@ -26,6 +26,11 @@ export const MoviesHomePage = () => {
     dispatch(fetchHomeRequested(1));
   }, [dispatch, homeState.isLoading, homeState.items.length]);
 
+  const handlePageChange = (page: number) => {
+    if (homeState.isLoading || page === homeState.page) return;
+    dispatch(fetchHomeRequested(page));
+  };
+
   if (homeState.error && !homeState.items.length) {
     return <div>Error: {homeState.error}</div>;
   }
@@ -49,6 +54,9 @@ export const MoviesHomePage = () => {
           <MoviesGrid
             isLoading={homeState.isLoading}
             movies={homeMoviesToRender}
+            currentPage={homeState.page}
+            totalPages={homeState.totalPages}
+            onPageChange={handlePageChange}
           />
         )}
       </div>

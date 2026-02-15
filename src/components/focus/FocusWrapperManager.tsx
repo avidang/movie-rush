@@ -46,6 +46,46 @@ const focusFirstInWrapper = (wrapper: HTMLElement | null) => {
   return true;
 };
 
+const focusClosestInWrapper = (
+  wrapper: HTMLElement | null,
+  reference: HTMLElement | null,
+) => {
+  if (!wrapper) return false;
+
+  const items = getFocusable(wrapper);
+  if (!items.length) return false;
+
+  if (!reference) {
+    focusItem(items[0]);
+    return true;
+  }
+
+  const referenceRect = reference.getBoundingClientRect();
+  const referenceCenterX = referenceRect.left + referenceRect.width / 2;
+  const referenceCenterY = referenceRect.top + referenceRect.height / 2;
+
+  let closest = items[0];
+  let closestDistance = Number.POSITIVE_INFINITY;
+
+  items.forEach((item) => {
+    const rect = item.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const distance = Math.hypot(
+      centerX - referenceCenterX,
+      centerY - referenceCenterY,
+    );
+
+    if (distance < closestDistance) {
+      closest = item;
+      closestDistance = distance;
+    }
+  });
+
+  focusItem(closest);
+  return true;
+};
+
 const isGridWrapper = (wrapper: HTMLElement | null) =>
   wrapper?.dataset.focusGrid === 'true';
 
@@ -131,5 +171,5 @@ const handleKeyDown = (
 
   const direction = event.key === 'ArrowDown' ? 1 : -1;
   const nextWrapper = findWrapperWithItems(wrappers, activeIndex, direction);
-  if (nextWrapper) focusFirstInWrapper(nextWrapper);
+  if (nextWrapper) focusClosestInWrapper(nextWrapper, active);
 };

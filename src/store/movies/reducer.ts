@@ -1,3 +1,4 @@
+import type { MoviesAction } from './actions';
 import {
   FETCH_AIRING_NOW_FAILED,
   FETCH_AIRING_NOW_REQUESTED,
@@ -12,8 +13,7 @@ import {
   FETCH_POPULAR_REQUESTED,
   FETCH_POPULAR_SUCCEEDED,
 } from './actions';
-import type { MoviesAction } from './actions';
-import type { MoviesListState, MoviesState } from './types';
+import type { MoviesState } from './types';
 
 const createListState = () => ({
   items: [],
@@ -23,20 +23,6 @@ const createListState = () => ({
   isLoading: false,
   error: null,
 });
-
-const mergeUniqueById = (
-  existing: MoviesListState['items'],
-  incoming: MoviesListState['items'],
-) => {
-  // I notice that the API can return duplicate movies across pages, so we merge them by ID to avoid duplicates in the list
-  const merged = new Map(existing.map((item) => [item.id, item]));
-  incoming.forEach((item) => {
-    if (!merged.has(item.id)) {
-      merged.set(item.id, item);
-    }
-  });
-  return Array.from(merged.values());
-};
 
 const initialState: MoviesState = {
   home: createListState(),
@@ -70,10 +56,7 @@ export const moviesReducer = (
         ...state,
         popular: {
           ...state.popular,
-          items:
-            action.payload.page > 1
-              ? mergeUniqueById(state.popular.items, action.payload.results)
-              : action.payload.results,
+          items: action.payload.results,
           page: action.payload.page,
           totalPages: action.payload.totalPages,
           totalResults: action.payload.totalResults,
@@ -105,10 +88,7 @@ export const moviesReducer = (
         ...state,
         home: {
           ...state.home,
-          items:
-            action.payload.page > 1
-              ? mergeUniqueById(state.home.items, action.payload.results)
-              : action.payload.results,
+          items: action.payload.results,
           page: action.payload.page,
           totalPages: action.payload.totalPages,
           totalResults: action.payload.totalResults,
@@ -140,10 +120,7 @@ export const moviesReducer = (
         ...state,
         airingNow: {
           ...state.airingNow,
-          items:
-            action.payload.page > 1
-              ? mergeUniqueById(state.airingNow.items, action.payload.results)
-              : action.payload.results,
+          items: action.payload.results,
           page: action.payload.page,
           totalPages: action.payload.totalPages,
           totalResults: action.payload.totalResults,
