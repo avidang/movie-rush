@@ -1,4 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
+import { isAxiosError } from 'axios';
 import {
   FETCH_AIRING_NOW_REQUESTED,
   FETCH_HOME_REQUESTED,
@@ -25,8 +26,27 @@ import { getAiringNowMovies } from '@/api/movies/airing-now';
 import { getMovieDetails } from '@/api/movies/details';
 import { getPopularMovies } from '@/api/movies/popular';
 
-const getErrorMessage = (error: unknown) =>
-  error instanceof Error ? error.message : 'Unknown error';
+const getErrorMessage = (error: unknown) => {
+  if (isAxiosError(error)) {
+    const data = error.response?.data as
+      | { status_message?: string; message?: string }
+      | undefined;
+
+    if (typeof data?.status_message === 'string' && data.status_message.trim()) {
+      return data.status_message;
+    }
+
+    if (typeof data?.message === 'string' && data.message.trim()) {
+      return data.message;
+    }
+
+    if (typeof error.message === 'string' && error.message.trim()) {
+      return error.message;
+    }
+  }
+
+  return error instanceof Error ? error.message : 'Unknown error';
+};
 
 function* fetchPopularSaga(action: FetchPopularRequestedAction): SagaIterator {
   try {

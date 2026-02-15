@@ -42,11 +42,13 @@ export const MoviesHomePage = () => {
     }
 
     if (homeState.isLoading) return;
+    if (homeState.error && homeState.page === routePage) return;
     if (homeState.page === routePage && homeState.items.length) return;
 
     dispatch(fetchHomeRequested(routePage));
   }, [
     dispatch,
+    homeState.error,
     homeState.isLoading,
     homeState.items.length,
     homeState.page,
@@ -66,10 +68,6 @@ export const MoviesHomePage = () => {
     });
   };
 
-  if (homeState.error && !homeState.items.length) {
-    return <div>Error: {homeState.error}</div>;
-  }
-
   return (
     <div className="space-y-6 p-4">
       <div className="space-y-3">
@@ -84,6 +82,11 @@ export const MoviesHomePage = () => {
       </div>
       <div className="space-y-6">
         <MoviesFilterBar title="Explore Movies" />
+        {homeState.error ? (
+          <div className="rounded-2xl bg-error/10 p-4 text-error">
+            Error: {homeState.error}
+          </div>
+        ) : null}
         <MoviesSearchSection />
         {!hasSearched && (
           <MoviesGrid

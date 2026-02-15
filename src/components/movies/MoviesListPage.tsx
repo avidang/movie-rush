@@ -59,12 +59,14 @@ export const MoviesListPage = ({
     }
 
     if (listState.isLoading) return;
+    if (listState.error && listState.page === routePage) return;
     if (listState.page === routePage && listState.items.length) return;
 
     dispatch(fetchAction(routePage));
   }, [
     dispatch,
     fetchAction,
+    listState.error,
     listState.isLoading,
     listState.items.length,
     listState.page,
@@ -73,13 +75,14 @@ export const MoviesListPage = ({
     routePage,
   ]);
 
-  if (listState.error) {
-    return <div>Error: {listState.error}</div>;
-  }
-
   return (
     <div className="space-y-6 p-4">
       <MoviesFilterBar title={title} />
+      {listState.error ? (
+        <div className="rounded-2xl bg-error/10 p-4 text-error">
+          Error: {listState.error}
+        </div>
+      ) : null}
       <MoviesGrid
         isLoading={listState.isLoading}
         movies={listState.items}
